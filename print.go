@@ -169,7 +169,7 @@ func sprint(err error, nums []int, colorized bool) string {
 	e, ok := err.(Error)
 	if !ok {
 		bflag := false
-		for _, fn := range []string{"err", "error", "er", "e", "ex"} {
+		for _, fn := range []string{"err", "Err", "error", "Error", "er", "Er", "e", "E", "ex"} {
 			v := getStructPtrUnExportedField(err, fn)
 			if !v.IsValid() {
 				continue

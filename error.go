@@ -43,12 +43,16 @@ func Errorf(message string, args ...interface{}) Error {
 }
 
 // New creates new error with stacktrace.
-func New(message string) Error {
-	return trace(fmt.Errorf(message), 2)
+func New(message string, skip ...int) Error {
+	if len(skip) > 0 {
+		return trace(fmt.Errorf(message), skip[0])
+	} else {
+		return trace(fmt.Errorf(message), 2)
+	}
 }
 
 // Wrap adds stacktrace to existing error.
-func Wrap(err error) Error {
+func Wrap(err error, skip ...int) Error {
 	if err == nil {
 		return nil
 	}
@@ -56,7 +60,11 @@ func Wrap(err error) Error {
 	if ok {
 		return e
 	}
-	return trace(err, 2)
+	if len(skip) > 0 {
+		return trace(err, skip[0])
+	} else {
+		return trace(err, 2)
+	}
 }
 
 // Unwrap returns the original error.
