@@ -81,8 +81,8 @@ func Unwrap(err error) error {
 
 // Error returns error message.
 func (e *errorData) Error() string {
-	return Sprint(e.err)
-	//return e.err.Error()
+	//return Sprint(e.err)
+	return e.err.Error()
 }
 
 // StackTrace returns stack trace of an error.
