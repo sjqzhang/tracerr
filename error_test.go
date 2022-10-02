@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ztrue/tracerr"
+	"github.com/sjqzhang/tracerr"
 )
 
 type ErrorTestCase struct {

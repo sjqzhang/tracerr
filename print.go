@@ -3,8 +3,10 @@ package tracerr
 import (
 	"fmt"
 	"io/ioutil"
+	"reflect"
 	"strings"
 	"sync"
+	"unsafe"
 
 	"github.com/logrusorgru/aurora"
 )
@@ -106,6 +108,16 @@ func readLines(path string) ([]string, error) {
 	return lines, nil
 }
 
+func getStructPtrUnExportedField(source interface{}, fieldName string) reflect.Value {
+	defer func() {
+		if r := recover(); r != nil {
+			return
+		}
+	}()
+	v := reflect.ValueOf(source).Elem().FieldByName(fieldName)
+	return reflect.NewAt(v.Type(), unsafe.Pointer(v.UnsafeAddr())).Elem()
+}
+
 func sourceRows(rows []string, frame Frame, before, after int, colorized bool) []string {
 	lines, err := readLines(frame.Path)
 	if err != nil {
@@ -156,7 +168,13 @@ func sprint(err error, nums []int, colorized bool) string {
 	}
 	e, ok := err.(Error)
 	if !ok {
-		return err.Error()
+		v := getStructPtrUnExportedField(err, "err")
+		if !v.IsValid() {
+			return err.Error()
+		}
+		if _, ok := v.Interface().(Error); ok {
+			err = v.Interface().(Error)
+		}
 	}
 	before, after, withSource := calcRows(nums)
 	frames := e.StackTrace()

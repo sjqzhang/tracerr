@@ -11,7 +11,7 @@ import (
 
 	"github.com/logrusorgru/aurora"
 
-	"github.com/ztrue/tracerr"
+	"github.com/sjqzhang/tracerr"
 )
 
 type PrintTestCase struct {
