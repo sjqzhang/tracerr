@@ -17,7 +17,7 @@ package main
 import (
 	"io/ioutil"
 
-	"github.com/ztrue/tracerr"
+	"github.com/sjqzhang/tracerr"
 )
 
 func main() {
@@ -44,7 +44,7 @@ Find more executable examples in [examples](examples) dir.
 ### Import
 
 ```go
-import "github.com/ztrue/tracerr"
+import "github.com/sjqzhang/tracerr"
 ```
 
 ### Create New Error

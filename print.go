@@ -168,12 +168,14 @@ func sprint(err error, nums []int, colorized bool) string {
 	}
 	e, ok := err.(Error)
 	if !ok {
-		v := getStructPtrUnExportedField(err, "err")
+		v:= getStructPtrUnExportedField(err, "err")
+		//_,_=v,v2
 		if !v.IsValid() {
 			return err.Error()
 		}
 		if _, ok := v.Interface().(Error); ok {
 			err = v.Interface().(Error)
+			e=v.Interface().(Error)
 		}
 	}
 	before, after, withSource := calcRows(nums)

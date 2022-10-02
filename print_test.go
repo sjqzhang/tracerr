@@ -3,6 +3,7 @@ package tracerr_test
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"regexp"
@@ -19,6 +20,74 @@ type PrintTestCase struct {
 	Printer              func()
 	ExpectedRows         []string
 	ExpectedMinExtraRows int
+}
+
+type ReturnCode int
+
+type exception struct {
+	errCode ReturnCode
+	message string
+	err     error
+}
+
+//func NewException(ctx context.Context, msg i18n.Message, extraInfo ...interface{}) Exception {
+//	return &exception{errCode: ReturnCode(msg.Code), message: i18n.GetMessage(msg.Key, i18n.GetLang(ctx), extraInfo...)}
+//}
+//
+////Deprecated:  Use i18n.NewException instead.
+//func NewExceptionI18n(errCode i18n.Message, msg string) Exception {
+//	return &exception{errCode: ReturnCode(errCode.Code), message: msg}
+//}
+
+func (b *exception) Error() string {
+	return fmt.Sprintf("errcode: %v, message: %s", b.ErrCode(), b.Message())
+}
+
+func (b *exception) ErrCode() ReturnCode {
+	return b.errCode
+}
+
+func (b *exception) Message() string {
+	return b.message
+}
+
+type Exception interface {
+	error
+	ErrCode() ReturnCode
+	Message() string
+}
+
+func WrapExceptionErr(e Exception, err error) Exception {
+	err = tracerr.Wrap(err)
+	return &exception{
+		err:     err,
+		errCode: e.ErrCode(),
+		message: e.Message() + ": " + err.Error(),
+	}
+}
+
+func WrapExceptionMessage(e Exception, format string, args ...interface{}) Exception {
+	err := tracerr.New(e.Error())
+	return &exception{
+		err:     err,
+		errCode: e.ErrCode(),
+		message: e.Message() + ": " + fmt.Sprintf(format, args...),
+	}
+}
+
+
+func TestGetStructPtrUnExportedField(t *testing.T) {
+
+	e:=errors.New("asdfasdfa")
+
+	err := WrapExceptionErr(&exception{errCode: 1, message: "asdfasdf"}, e)
+
+	output := tracerr.SprintSource(err)
+
+	fmt.Println(output)
+
+
+
 }
 
 func TestPrint(t *testing.T) {
