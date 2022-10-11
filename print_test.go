@@ -50,11 +50,15 @@ func (b *exception) ErrCode() ReturnCode {
 func (b *exception) Message() string {
 	return b.message
 }
+func (b *exception) Unwrap() error {
+	return b.err
+}
 
 type Exception interface {
 	error
 	ErrCode() ReturnCode
 	Message() string
+	Unwrap() error
 }
 
 func WrapExceptionErr(e Exception, err error) Exception {
@@ -75,22 +79,32 @@ func WrapExceptionMessage(e Exception, format string, args ...interface{}) Excep
 	}
 }
 
+func TestXXX(t *testing.T) {
+
+}
 
 func TestGetStructPtrUnExportedField(t *testing.T) {
 
-	e:=errors.New("asdfasdfa")
+	e := errors.New("asdfasdfa")
 
 	err := WrapExceptionErr(&exception{errCode: 1, message: "asdfasdf"}, e)
 
 	output := tracerr.SprintSource(err)
+	_ = output
+	//
+	//fmt.Println(output)
 
-	fmt.Println(output)
+	//fmt.Println(errors.Is( err,e))
 
-
+	//
+	//ex := exception{errCode: 11, message: "xxx"}
+	//exx := WrapExceptionErr(&ex, e)
+	//fmt.Println(errors.Is( exx,&ex))
 
 }
 
 func TestPrint(t *testing.T) {
+	t.Skip()
 	message := "runtime error: index out of range"
 	err := addFrameA(message)
 

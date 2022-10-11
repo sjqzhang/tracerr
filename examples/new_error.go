@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"github.com/sjqzhang/tracerr"
 )
 
 func main() {
 	if err := foo(); err != nil {
-		tracerr.PrintSourceColor(err)
+		//tracerr.PrintSourceColor(err)
+		fmt.Println(tracerr.Sprint(err))
 	}
 }
 

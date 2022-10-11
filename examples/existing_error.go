@@ -1,3 +1,5 @@
+//go:build ignore
+// +build ignore
 package main
 
 import (
@@ -7,9 +9,9 @@ import (
 )
 
 func main() {
-	if err := read(); err != nil {
-		tracerr.PrintSourceColor(err)
-	}
+	//if err := read(); err != nil {
+	//	tracerr.PrintSourceColor(err)
+	//}
 }
 
 func read() error {

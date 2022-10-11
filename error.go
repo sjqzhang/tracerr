@@ -13,6 +13,7 @@ import (
 // It can be changed to number of expected frames
 // for purpose of performance optimisation.
 var DefaultCap = 20
+var DefaultPrintStackMaxDepth = 30
 
 // Error is an error with stack trace.
 type Error interface {
@@ -26,6 +27,14 @@ type errorData struct {
 	err error
 	// frames contains stack trace of an error.
 	frames []Frame
+}
+
+// CustomError creates an error with provided frames.
+func SetStackMaxDepth(depth int) {
+	if depth <= 0 {
+		depth = 5
+	}
+	DefaultPrintStackMaxDepth = depth
 }
 
 // CustomError creates an error with provided frames.
@@ -122,7 +131,9 @@ func (f Frame) String() string {
 
 func trace(err error, skip int) Error {
 	frames := make([]Frame, 0, DefaultCap)
+	catchMaxCall := DefaultPrintStackMaxDepth
 	for {
+		catchMaxCall--
 		pc, path, line, ok := runtime.Caller(skip)
 		if !ok {
 			break
@@ -135,6 +146,9 @@ func trace(err error, skip int) Error {
 		}
 		frames = append(frames, frame)
 		skip++
+		if catchMaxCall == 0 {
+			break
+		}
 	}
 	return &errorData{
 		err:    err,
