@@ -13,7 +13,7 @@ import (
 // It can be changed to number of expected frames
 // for purpose of performance optimisation.
 var DefaultCap = 20
-var DefaultPrintStackMaxDepth = 30
+var DefaultPrintStackMaxDepth = 5
 
 // Error is an error with stack trace.
 type Error interface {

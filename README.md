@@ -47,6 +47,14 @@ Find more executable examples in [examples](examples) dir.
 import "github.com/sjqzhang/tracerr"
 ```
 
+### Set DefaultPrintStackMaxDepth
+
+```go
+// Set default max depth of stack trace to print.
+// Default value is 5.
+tracerr.DefaultPrintStackMaxDepth = 10
+```
+
 ### Create New Error
 
 ```go
@@ -159,7 +167,9 @@ err = err.Unwrap()
 
 ## Performance
 
-Stack trace causes a performance overhead, depending on a stack trace depth. This can be insignificant in a number of situations (such as HTTP request handling), however, avoid of adding a stack trace for really hot spots where a high number of errors created frequently, this can be inefficient.
+Stack trace causes a performance overhead, depending on a stack trace depth. This can be insignificant in a number of
+situations (such as HTTP request handling), however, avoid of adding a stack trace for really hot spots where a high
+number of errors created frequently, this can be inefficient.
 
 > Benchmarks done on a MacBook Pro 2015 with go 1.11.
 
